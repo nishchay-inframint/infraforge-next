@@ -143,183 +143,204 @@ export function Marketplace() {
   const activeFiltersCount = Object.values(filters).filter(Boolean).length + (searchQuery ? 1 : 0) - 1; // -1 for sortBy which is always set
 
   return (
-    <div className="container py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">Template Marketplace</h1>
-        <p className="text-lg text-muted-foreground">
-          Discover and deploy production-ready infrastructure templates
-        </p>
-      </div>
-
-      {/* Search and Filters Bar */}
-      <div className="flex flex-col lg:flex-row gap-4 mb-8">
-        {/* Search */}
-        <form onSubmit={handleSearch} className="flex-1">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search by resource: EC2, Lambda, RDS, Azure Functions..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4"
-            />
+    <div className="min-h-screen bg-background">
+      {/* Header Section */}
+      <div className="border-b bg-card/30 backdrop-blur-sm">
+        <div className="container py-12">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              Template Marketplace
+            </h1>
+            <p className="text-xl text-muted-foreground leading-relaxed">
+              Discover and deploy production-ready infrastructure templates for AWS, Azure, and Google Cloud
+            </p>
           </div>
-        </form>
-
-        {/* Filter Actions */}
-        <div className="flex items-center gap-2">
-          {/* Sort */}
-          <Select
-            value={filters.sortBy}
-            onValueChange={(value) => setFilters(prev => ({ ...prev, sortBy: value as any }))}
-          >
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="popular">Popular</SelectItem>
-              <SelectItem value="newest">Newest</SelectItem>
-              <SelectItem value="rating">Highest Rated</SelectItem>
-              <SelectItem value="downloads">Most Downloaded</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {/* View Mode Toggle */}
-          <div className="flex border rounded-md">
-            <Button
-              variant={viewMode === 'grid' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('grid')}
-              className="rounded-r-none"
-            >
-              <Grid3X3 className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={viewMode === 'list' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('list')}
-              className="rounded-l-none"
-            >
-              <List className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* Mobile Filters */}
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" className="lg:hidden">
-                <Filter className="h-4 w-4 mr-2" />
-                Filters
-                {activeFiltersCount > 0 && (
-                  <Badge variant="secondary" className="ml-2 text-xs">
-                    {activeFiltersCount}
-                  </Badge>
-                )}
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-80">
-              <SheetHeader>
-                <SheetTitle>Filters</SheetTitle>
-                <SheetDescription>
-                  Refine your template search
-                </SheetDescription>
-              </SheetHeader>
-              <div className="mt-6 space-y-6">
-                <ResourceFilter 
-                  searchQuery={searchQuery}
-                  onSearch={setSearchQuery}
-                />
-                <FilterContent filters={filters} setFilters={setFilters} />
-              </div>
-            </SheetContent>
-          </Sheet>
         </div>
       </div>
 
-      <div className="flex gap-8">
-        {/* Desktop Sidebar Filters */}
-        <aside className="hidden lg:block w-80 flex-shrink-0">
-          <div className="sticky top-24">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-foreground">Filters</h3>
-              {activeFiltersCount > 0 && (
-                <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  <X className="h-4 w-4 mr-1" />
-                  Clear
+      {/* Search and Filters Section */}
+      <div className="border-b bg-muted/20">
+        <div className="container py-6">
+          <div className="flex flex-col lg:flex-row gap-4">
+            {/* Search */}
+            <form onSubmit={handleSearch} className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Search by resource: EC2, Lambda, RDS, Azure Functions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 pr-4 h-12"
+                />
+              </div>
+            </form>
+
+            {/* Filter Actions */}
+            <div className="flex items-center gap-3">
+              {/* Sort */}
+              <Select
+                value={filters.sortBy}
+                onValueChange={(value) => setFilters(prev => ({ ...prev, sortBy: value as any }))}
+              >
+                <SelectTrigger className="w-44 h-12">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="popular">Popular</SelectItem>
+                  <SelectItem value="newest">Newest</SelectItem>
+                  <SelectItem value="rating">Highest Rated</SelectItem>
+                  <SelectItem value="downloads">Most Downloaded</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* View Mode Toggle */}
+              <div className="flex border rounded-lg overflow-hidden">
+                <Button
+                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('grid')}
+                  className="rounded-none h-12 px-4"
+                >
+                  <Grid3X3 className="h-4 w-4" />
                 </Button>
-              )}
+                <Button
+                  variant={viewMode === 'list' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('list')}
+                  className="rounded-none h-12 px-4"
+                >
+                  <List className="h-4 w-4" />
+                </Button>
+              </div>
+
+              {/* Mobile Filters */}
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" className="lg:hidden h-12">
+                    <Filter className="h-4 w-4 mr-2" />
+                    Filters
+                    {activeFiltersCount > 0 && (
+                      <Badge variant="secondary" className="ml-2 text-xs">
+                        {activeFiltersCount}
+                      </Badge>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-80">
+                  <SheetHeader>
+                    <SheetTitle>Filters</SheetTitle>
+                    <SheetDescription>
+                      Refine your template search
+                    </SheetDescription>
+                  </SheetHeader>
+                  <div className="mt-6 space-y-6">
+                    <ResourceFilter 
+                      searchQuery={searchQuery}
+                      onSearch={setSearchQuery}
+                    />
+                    <FilterContent filters={filters} setFilters={setFilters} />
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
-            
-            {/* Resource Filter */}
-            <ResourceFilter 
-              searchQuery={searchQuery}
-              onSearch={setSearchQuery}
-              className="mb-6"
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="container py-8">
+        <div className="flex gap-8">
+          {/* Desktop Sidebar Filters */}
+          <aside className="hidden lg:block w-80 flex-shrink-0">
+            <div className="sticky top-6 bg-card/50 backdrop-blur-sm border rounded-xl p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-semibold text-foreground flex items-center gap-2">
+                  <SlidersHorizontal className="h-4 w-4" />
+                  Filters
+                </h3>
+                {activeFiltersCount > 0 && (
+                  <Button variant="ghost" size="sm" onClick={clearFilters}>
+                    <X className="h-4 w-4 mr-1" />
+                    Clear ({activeFiltersCount})
+                  </Button>
+                )}
+              </div>
+              
+              {/* Resource Filter */}
+              <ResourceFilter 
+                searchQuery={searchQuery}
+                onSearch={setSearchQuery}
+                className="mb-6"
+              />
+              
+              <FilterContent filters={filters} setFilters={setFilters} />
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <main className="flex-1 space-y-6">
+            {/* Active Filters */}
+            {activeFiltersCount > 0 && (
+              <div className="bg-muted/30 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-sm font-medium">Active filters:</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {searchQuery && (
+                    <Badge variant="outline" className="gap-1">
+                      Search: {searchQuery}
+                      <X 
+                        className="h-3 w-3 cursor-pointer hover:text-destructive" 
+                        onClick={() => {
+                          setSearchQuery('');
+                          updateUrlParams({ search: undefined });
+                        }}
+                      />
+                    </Badge>
+                  )}
+                  {filters.category && (
+                    <Badge variant="outline" className="gap-1">
+                      Category: {mockCategories.find(c => c.id === filters.category)?.name}
+                      <X 
+                        className="h-3 w-3 cursor-pointer hover:text-destructive" 
+                        onClick={() => setFilters(prev => ({ ...prev, category: undefined }))}
+                      />
+                    </Badge>
+                  )}
+                  {filters.provider && (
+                    <Badge variant="outline" className="gap-1">
+                      Provider: {mockProviders.find(p => p.id === filters.provider)?.name}
+                      <X 
+                        className="h-3 w-3 cursor-pointer hover:text-destructive" 
+                        onClick={() => setFilters(prev => ({ ...prev, provider: undefined }))}
+                      />
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Results Header */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold mb-1">
+                  {filteredTemplates.length} templates found
+                </h2>
+                <p className="text-muted-foreground">
+                  Showing {filteredTemplates.length} of {mockTemplates.length} total templates
+                </p>
+              </div>
+            </div>
+
+            {/* Templates Grid */}
+            <TemplateGrid 
+              templates={filteredTemplates} 
+              loading={loading}
+              variant={viewMode === 'grid' ? 'default' : 'compact'}
             />
-            
-            <FilterContent filters={filters} setFilters={setFilters} />
-          </div>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1">
-          {/* Active Filters */}
-          {activeFiltersCount > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              {searchQuery && (
-                <Badge variant="outline">
-                  Search: {searchQuery}
-                  <X 
-                    className="h-3 w-3 ml-1 cursor-pointer" 
-                    onClick={() => {
-                      setSearchQuery('');
-                      updateUrlParams({ search: undefined });
-                    }}
-                  />
-                </Badge>
-              )}
-              {filters.category && (
-                <Badge variant="outline">
-                  Category: {mockCategories.find(c => c.id === filters.category)?.name}
-                  <X 
-                    className="h-3 w-3 ml-1 cursor-pointer" 
-                    onClick={() => setFilters(prev => ({ ...prev, category: undefined }))}
-                  />
-                </Badge>
-              )}
-              {filters.provider && (
-                <Badge variant="outline">
-                  Provider: {mockProviders.find(p => p.id === filters.provider)?.name}
-                  <X 
-                    className="h-3 w-3 ml-1 cursor-pointer" 
-                    onClick={() => setFilters(prev => ({ ...prev, provider: undefined }))}
-                  />
-                </Badge>
-              )}
-            </div>
-          )}
-
-          {/* Results Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-xl font-semibold">
-                {filteredTemplates.length} templates found
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Showing {filteredTemplates.length} of {mockTemplates.length} total templates
-              </p>
-            </div>
-          </div>
-
-          {/* Templates Grid */}
-          <TemplateGrid 
-            templates={filteredTemplates} 
-            loading={loading}
-            variant={viewMode === 'grid' ? 'default' : 'compact'}
-          />
-        </main>
+          </main>
+        </div>
       </div>
     </div>
   );
