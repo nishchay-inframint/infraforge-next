@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TemplateGrid } from '@/components/templates/TemplateGrid';
+import { ResourceFilter } from '@/components/templates/ResourceFilter';
 import { mockTemplates, mockCategories, mockProviders } from '@/data/mockData';
 import { SearchFilters, Template } from '@/types';
 import { 
@@ -64,12 +65,15 @@ export function Marketplace() {
   useEffect(() => {
     let filtered = [...mockTemplates];
 
-    // Search filter
+    // Search filter with resource-specific matching
     if (searchQuery) {
+      const query = searchQuery.toLowerCase();
       filtered = filtered.filter(template =>
-        template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        template.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        template.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        template.name.toLowerCase().includes(query) ||
+        template.description.toLowerCase().includes(query) ||
+        template.tags.some(tag => tag.toLowerCase().includes(query)) ||
+        template.deployment.resources.some(resource => resource.toLowerCase().includes(query)) ||
+        template.features.some(feature => feature.toLowerCase().includes(query))
       );
     }
 
@@ -156,7 +160,7 @@ export function Marketplace() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search templates, tags, providers..."
+              placeholder="Search by resource: EC2, Lambda, RDS, Azure Functions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 pr-4"
@@ -222,7 +226,11 @@ export function Marketplace() {
                   Refine your template search
                 </SheetDescription>
               </SheetHeader>
-              <div className="mt-6">
+              <div className="mt-6 space-y-6">
+                <ResourceFilter 
+                  searchQuery={searchQuery}
+                  onSearch={setSearchQuery}
+                />
                 <FilterContent filters={filters} setFilters={setFilters} />
               </div>
             </SheetContent>
@@ -232,7 +240,7 @@ export function Marketplace() {
 
       <div className="flex gap-8">
         {/* Desktop Sidebar Filters */}
-        <aside className="hidden lg:block w-64 flex-shrink-0">
+        <aside className="hidden lg:block w-80 flex-shrink-0">
           <div className="sticky top-24">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-foreground">Filters</h3>
@@ -243,6 +251,14 @@ export function Marketplace() {
                 </Button>
               )}
             </div>
+            
+            {/* Resource Filter */}
+            <ResourceFilter 
+              searchQuery={searchQuery}
+              onSearch={setSearchQuery}
+              className="mb-6"
+            />
+            
             <FilterContent filters={filters} setFilters={setFilters} />
           </div>
         </aside>
